@@ -11,6 +11,18 @@ void displayHeader() {
     printf("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n");
     printf("11111111111111111111111111111111111111\n");
     printf("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n");
+    printf("44444444444444444444444444444444444444\n");
+    printf("22222222222222222222222222222222222222\n");
+    printf("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n");
+    printf("11111111111111111111111111111111111111\n");
+    printf("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n");
+    printf("44444444444444444444444444444444444444\n");
+    printf("22222222222222222222222222222222222222\n");
+    printf("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n");
+    printf("11111111111111111111111111111111111111\n");
+    printf("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n");
+    printf("44444444444444444444444444444444444444\n");
+    printf("22222222222222222222222222222222222222\n");
 }
 
 void printSeating(char seating[ROWS][COLS]) {
@@ -175,6 +187,67 @@ int main() {
         printf("------------------------------\n");
         char choice;
         scanf(" %c", &choice);
+        
+        switch (choice) {
+            case 'a':
+                system("cls");
+                printSeating(seating);
+                printf("Press any key to return to menu...");
+                getchar(); getchar();
+                system("cls");
+                break;
+
+            case 'b': {
+                system("cls");
+                int numSeats;
+                printf("How many seats do you need? (1-4): ");
+                scanf("%d", &numSeats);
+                if (numSeats < 1 || numSeats > 4) {
+                    printf("Invalid number of seats. Try again.\n");
+                    break;
+                }
+                char tempSeating[ROWS][COLS];
+                for (i = 0; i < ROWS; ++i) {
+                    for (j = 0; j < COLS; ++j) {
+                        tempSeating[i][j] = seating[i][j];
+                    }
+                }
+                if (suggestSeats(tempSeating, numSeats)) {
+                    printSeating(tempSeating);
+                    printf("Are you satisfied with the suggestion? (y/n): ");
+                    char satisfaction;
+                    scanf(" %c", &satisfaction);
+                    if (satisfaction == 'y') {
+                        for (i = 0; i < ROWS; ++i) {
+                            for (j = 0; j < COLS; ++j) {
+                                if (tempSeating[i][j] == '@') {
+                                    seating[i][j] = '*';
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    printf("No available seats found for your request.\n");
+                }
+                system("cls");
+                break;
+            }
+
+            case 'c':
+                system("cls");
+                manualReservation(seating);
+                system("cls");
+                break;
+
+            case 'd':
+                system("cls");
+                handleOptionD();
+                system("cls");
+                break;
+
+            default:
+                printf("Invalid option. Try again.\n");
+        }
         
 
     }
