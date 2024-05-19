@@ -1,86 +1,183 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
+#include <time.h>
+#include <ctype.h>
+#include <string.h>
 
-int main(void) {
-    puts("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    puts("11111111111111111111111111111111111111");
-    puts("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-    puts("44444444444444444444444444444444444444");
-    puts("22222222222222222222222222222222222222");
-    puts("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    puts("11111111111111111111111111111111111111");
-    puts("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-    puts("44444444444444444444444444444444444444");
-    puts("22222222222222222222222222222222222222");
-    puts("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    puts("11111111111111111111111111111111111111");
-    puts("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-    puts("44444444444444444444444444444444444444");
-    puts("22222222222222222222222222222222222222");
-    puts("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    puts("11111111111111111111111111111111111111");
-    puts("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-    puts("44444444444444444444444444444444444444");
-    puts("22222222222222222222222222222222222222");
-    system("pause");
-    system("CLS");
-    int password, a = 0, n, x; 
-    while (a < 3) {
-        printf("請輸入密碼:"); 
-        scanf("%d", &password); 
-        if (password == 2024) // 密碼是2024 
-        {
-            break;
-        } else {
-            a++;
-            printf("密碼錯誤,剩下%d次機會\n", 3 - a); 
+#define ROWS 9
+#define COLS 9
+
+void displayHeader() {
+    printf("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE\n");
+    printf("11111111111111111111111111111111111111\n");
+    printf("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n");
+}
+
+void printSeating(char seating[ROWS][COLS]) {
+    printf("   123456789\n");
+    int i, j;
+    for (i = 0; i < ROWS; ++i) {
+        printf("%d ", i + 1);
+        for (j = 0; j < COLS; ++j) {
+            printf("%c", seating[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void generateRandomReservations(char seating[ROWS][COLS]) {
+    srand(time(0));
+    int count = 10;
+    while (count > 0) {
+        int r = rand() % ROWS;
+        int c = rand() % COLS;
+        if (seating[r][c] == '-') {
+            seating[r][c] = '*';
+            count--;
         }
     }
-    if (a == 3) {
+}
+
+int suggestSeats(char seating[ROWS][COLS], int numSeats) {
+    int i, j, k;
+    for (i = 0; i < ROWS; ++i) {
+        for (j = 0; j <= COLS - numSeats; ++j) {
+            int available = 1;
+            for (k = 0; k < numSeats; ++k) {
+                if (seating[i][j + k] != '-') {
+                    available = 0;
+                    break;
+                }
+            }
+            if (available) {
+                for (k = 0; k < numSeats; ++k) {
+                    seating[i][j + k] = '@';
+                }
+                return 1;
+            }
+        }
+    }
+    if (numSeats == 4) {
+        for (i = 0; i < ROWS - 1; ++i) {
+            for (j = 0; j < COLS - 1; ++j) {
+                if (seating[i][j] == '-' && seating[i + 1][j] == '-' && seating[i][j + 1] == '-' && seating[i + 1][j + 1] == '-') {
+                    seating[i][j] = '@';
+                    seating[i + 1][j] = '@';
+                    seating[i][j + 1] = '@';
+                    seating[i + 1][j + 1] = '@';
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+void manualReservation(char seating[ROWS][COLS]) {
+    char input[10];
+    while (1) {
+        printf("Enter seat (1-2) or 'done' to finish: ");
+        scanf("%s", input);
+        if (strcmp(input, "done") == 0) break;
+        if (strlen(input) != 3 || input[1] != '-' || !isdigit(input[0]) || !isdigit(input[2])) {
+            printf("Invalid input format. Try again.\n");
+            continue;
+        }
+        int row = input[0] - '1';
+        int col = input[2] - '1';
+        if (row < 0 || row >= ROWS || col < 0 || col >= COLS || seating[row][col] != '-') {
+            printf("Invalid seat selection. Try again.\n");
+            continue;
+        }
+        seating[row][col] = '@';
+        printSeating(seating);
+    }
+    printf("Are you satisfied with the selection? (y/n): ");
+    char confirmation;
+    scanf(" %c", &confirmation);
+    if (confirmation == 'n') {
+        int i, j;
+        for (i = 0; i < ROWS; ++i) {
+            for (j = 0; j < COLS; ++j) {
+                if (seating[i][j] == '@') {
+                    seating[i][j] = '-';
+                }
+            }
+        }
+    } else {
+        int i, j;
+        for (i = 0; i < ROWS; ++i) {
+            for (j = 0; j < COLS; ++j) {
+                if (seating[i][j] == '@') {
+                    seating[i][j] = '*';
+                }
+            }
+        }
+    }
+}
+
+void handleOptionD() {
+    while (1) {
+        printf("Continue? (y/n): ");
+        char choice;
+        scanf(" %c", &choice);
+        if (choice == 'y') {
+            return;
+        } else if (choice == 'n') {
+            exit(0);
+        } else {
+            printf("Invalid input. Please enter 'y' or 'n'.\n");
+        }
+    }
+}
+
+int main() {
+    displayHeader();
+
+    system("pause");
+
+    int password, attempts = 0;
+
+    while (attempts < 3) {
+        printf("請輸入密碼: ");
+        scanf("%d", &password);
+
+        if (password == 2024) {
+            printf("密碼正確\n");
+            system("pause");
+            break;
+        } else {
+            attempts++;
+            printf("密碼錯誤, 剩下 %d 次機會\n", 3 - attempts);
+        }
+    }
+    if (attempts == 3) {
         printf("您已輸入錯3次密碼程序退出\n");
         return 0;
-    } else {
-        printf("密碼正確\n");
-        system("pause");
-        system("CLS"); // 清除螢幕
-    } 
-    {
-	system("cls"); //清除畫螢幕 
+    }
 
-	printf("------------------------------\n");
-	printf("-       [Booking System]     -\n");
-	printf("-       a.Available seats    -\n");
-	printf("-       b.Arrange for you    -\n"); 
-	printf("-       c.Choose by yourself -\n");
-	printf("-       d.Exit               -\n");
-	printf("------------------------------\n");
-	
-	char choice;  
+    char seating[ROWS][COLS];
+    int i, j;
+    for (i = 0; i < ROWS; ++i) {
+        for (j = 0; j < COLS; ++j) {
+            seating[i][j] = '-';
+        }
+    }
+    generateRandomReservations(seating);
 
-	printf("輸入a,b,c,d:");
-	fflush(stdin);  //清除暫存區 
-	scanf("%d", &choice);
-	switch(choice) 
-	{
-		case'a':
-			system("pause");
-			system("CLS");
-		case'b':
-			printf("how many seats you need?");
-			scanf("%d,&seats");
-			 
-		
-	     
-	}
+    while (1) {
+        printf("------------------------------\n");
+        printf("-       [Booking System]     -\n");
+        printf("-       a.Available seats    -\n");
+        printf("-       b.Arrange for you    -\n");
+        printf("-       c.Choose by yourself -\n");
+        printf("-       d.Exit               -\n");
+        printf("------------------------------\n");
+        char choice;
+        scanf(" %c", &choice);
+        
+
+    }
+
+    return 0;
 }
-
-    
-    
-    
-    
-    
-    
-    return 0;  
-}
-
