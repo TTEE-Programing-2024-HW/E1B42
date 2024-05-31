@@ -87,7 +87,29 @@ void displayMainMenu() {
     printf("請選擇功能：\n");
     scanf(" %c", &option);
 
+	switch(option) {
+        case 'a':
+            enterGrades();
+            break;
+        case 'b':
+            displayGrades();
+            break;
+        case 'c':
+            searchGrades();
+            break;
+        case 'd':
+            gradeRanking();
+            break;
+        case 'e':
+            exitSystem();
+            break;
+        default:
+            printf("輸入錯誤！\n");
+            displayMainMenu();
+    }
 }
+
+
 
 void clear_screen() {
     #ifdef _WIN32
