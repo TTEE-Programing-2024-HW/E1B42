@@ -154,6 +154,33 @@ void displayGrades() {
     displayMainMenu();
 }
 
+void searchGrades() {
+    clear_screen();
+    char searchName[100];
+    printf("請輸入要搜尋的姓名：\n");
+    scanf("%s", searchName);
+
+    int found = 0;
+    int i;
+    for (i = 0; i < numStudents; i++) {
+        if (strcmp(students[i].name, searchName) == 0) {
+            printf("姓名 學號 數學 物理 英文 平均成績\n");
+            printf("%s %d %.1f %.1f %.1f %.1f\n", students[i].name, students[i].studentID, students[i].mathGrade, students[i].physicsGrade, students[i].englishGrade, students[i].averageGrade);
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        printf("找不到！\n");
+    }
+
+    printf("按任意鍵返回主選單...\n");
+    getchar();
+    getchar(); 
+    displayMainMenu();
+}
+
 
 void clear_screen() {
     #ifdef _WIN32
