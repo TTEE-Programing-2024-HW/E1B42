@@ -203,7 +203,22 @@ void gradeRanking() {
     displayMainMenu(); 
 }
 
+void exitSystem() {
+    clear_screen();
+    char confirm;
+    printf("是否離開？ (y/n)\n");
+    scanf(" %c", &confirm);
 
+    if (confirm == 'y') {
+        printf("程式結束\n");
+        exit(0);
+    } else if (confirm == 'n') {
+        displayMainMenu();
+    } else {
+        printf("輸入錯誤，請重新選擇功能！\n");
+        exitSystem();
+    }
+}
 
 void clear_screen() {
     #ifdef _WIN32
