@@ -181,6 +181,29 @@ void searchGrades() {
     displayMainMenu();
 }
 
+void gradeRanking() {
+    clear_screen();
+    int i, j;
+    for (i = 0; i < numStudents - 1; ++i) {
+        for (j = 0; j < numStudents - i - 1; ++j) {
+            if (students[j].averageGrade < students[j + 1].averageGrade) {
+                Student temp = students[j];
+                students[j] = students[j + 1];
+                students[j + 1] = temp;
+            }
+        }
+    }
+    for (i = 0; i < numStudents; ++i) {
+        printf("姓名: %s, 學號: %d, 平均成績: %.1f\n",students[i].name, students[i].studentID, students[i].averageGrade);
+    }
+    printf("按任意鍵返回主選單...\n");
+    getchar(); 
+    getchar(); 
+    clear_screen();
+    displayMainMenu(); 
+}
+
+
 
 void clear_screen() {
     #ifdef _WIN32
