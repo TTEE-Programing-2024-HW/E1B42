@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Student {
+typedef struct {
     char name[100];
     int studentID;
     float mathGrade;
     float physicsGrade;
     float englishGrade;
     float averageGrade;
-};
+} Student;
 
 void displayMainMenu();
 void enterGrades();
@@ -19,7 +19,7 @@ void gradeRanking();
 void exitSystem();
 void clear_screen();
 void displayHeader();
-//個人封面 
+
 void displayHeader() {
     printf("eeeeeeeeeeeeeeeeeeeeeeeee\n");
     printf("1111111111111111111111111\n");
@@ -43,7 +43,7 @@ void displayHeader() {
     printf("2222222222222222222222222\n");
 }
 
-struct Student students[10]; 
+Student students[10]; 
 int numStudents = 0; 
 
 int main() {
@@ -76,18 +76,18 @@ int main() {
 void displayMainMenu() {
     char option;
     clear_screen();
-    printf("\n------------[Grade System]----------\n");
-    printf("| a. Enter student grades |\n");
-    printf("| b. Display student grades |\n");
-    printf("| c. Search for student grades |\n");
-    printf("| d. Grade ranking |\n");
-    printf("| e. Exit system |\n");
-    printf("------------------------------------\n");
+    printf("             [Grade System]            \n");
+    printf("|       a. Enter student grades       |\n");
+    printf("|       b. Display student grades     |\n");
+    printf("|       c. Search for student grades  |\n");
+    printf("|       d. Grade ranking              |\n");
+    printf("|        e. Exit system               |\n");
+    printf("                                       \n");
 
     printf("請選擇功能：\n");
     scanf(" %c", &option);
 
-	switch(option) {
+    switch(option) {
         case 'a':
             enterGrades();
             break;
@@ -109,6 +109,37 @@ void displayMainMenu() {
     }
 }
 
+void enterGrades() {
+    clear_screen();
+    int n;
+    printf("輸入學生人數 n (5~10)：\n");
+    scanf("%d", &n);
+
+    if (n < 5 || n > 10) {
+        printf("輸入錯誤，請輸入 5 到 10 之間的數字！\n");
+        enterGrades();
+        return;
+    }
+
+    int i;
+    for (i = 0; i < n; i++) {
+        printf("請輸入第 %d 位學生的姓名：\n", i+1);
+        scanf("%s", students[numStudents].name);
+        printf("請輸入學號：\n");
+        scanf("%d", &students[numStudents].studentID);
+        printf("請輸入數學成績：\n");
+        scanf("%f", &students[numStudents].mathGrade);
+        printf("請輸入物理成績：\n");
+        scanf("%f", &students[numStudents].physicsGrade);
+        printf("請輸入英文成績：\n");
+        scanf("%f", &students[numStudents].englishGrade);
+        students[numStudents].averageGrade = (students[numStudents].mathGrade + students[numStudents].physicsGrade + students[numStudents].englishGrade) / 3.0;
+        numStudents++;
+    }
+
+    printf("資料輸入完畢\n");
+    displayMainMenu();
+}
 
 
 void clear_screen() {
