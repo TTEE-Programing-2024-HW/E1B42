@@ -141,6 +141,19 @@ void enterGrades() {
     displayMainMenu();
 }
 
+void displayGrades() {
+    clear_screen();
+    printf("學生姓名 學號 數學 物理 英文 平均成績\n");
+    int i;
+    for (i = 0; i < numStudents; i++) {
+        printf("%s  %d %.1f %.1f %.1f %.1f\n", students[i].name, students[i].studentID, students[i].mathGrade, students[i].physicsGrade, students[i].englishGrade, students[i].averageGrade); 
+    }
+    printf("按任意鍵返回主選單\n");
+    getchar();
+    getchar(); 
+    displayMainMenu();
+}
+
 
 void clear_screen() {
     #ifdef _WIN32
